@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAYBANK | Application Status</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-gold: #ffd700;
+            --primary-black: #000000;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(15, 15, 15, 0.8);
+            --card-border: rgba(255, 215, 0, 0.4);
+            --neon-glow: 0 0 10px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        body {
+            background: var(--dark-bg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: white;
+        }
+
+        .background-3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        .floating-shape {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            animation: float3d 20s infinite ease-in-out;
+        }
+
+        @keyframes float3d {
+            0%, 100% { transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); }
+            25% { transform: translate3d(50px, 30px, 50px) rotateX(10deg) rotateY(20deg); }
+            50% { transform: translate3d(-30px, 50px, 30px) rotateX(-5deg) rotateY(-15deg); }
+            75% { transform: translate3d(40px, -20px, 40px) rotateX(15deg) rotateY(10deg); }
+        }
+
+        .news-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            background: rgba(15, 15, 15, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--neon-glow);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .news-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--primary-gold);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .news-header i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .news-item {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-gold);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .news-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            vertical-align: middle;
+            opacity: 0.8;
+        }
+
+        .news-content {
+            display: inline-block;
+            width: calc(100% - 40px);
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .hologram-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 50px 40px;
+            width: 90%;
+            max-width: 600px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--neon-glow);
+            position: relative;
+            overflow: hidden;
+            animation: hologramFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes hologramFloat {
+            0%, 100% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-10px) rotateX(2deg); }
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .brand-logo {
+            font-size: 3.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 15px;
+            text-shadow: var(--neon-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .brand-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-gold), #ffaa00, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .brand-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin-top: 8px;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 18px 25px 18px 60px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 215, 0, 0.4);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-gold);
+            font-size: 1.3rem;
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 18px;
+            background: rgba(255, 215, 0, 0.85);
+            border: none;
+            border-radius: 12px;
+            color: var(--primary-black);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-btn:hover {
+            background: rgba(255, 215, 0, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .result-container {
+            margin-top: 30px;
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-card {
+            background: rgba(255, 215, 0, 0.08);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .applicant-name {
+            color: var(--primary-gold);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .card-item:last-child {
+            border-bottom: none;
+        }
+
+        .card-type {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .card-status {
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-approved {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.9), rgba(32, 201, 151, 0.9));
+            color: #fff;
+        }
+
+        .status-declined {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.9), rgba(248, 215, 218, 0.9));
+            color: #fff;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.9), rgba(255, 234, 167, 0.9));
+            color: #000;
+        }
+
+        .status-withdrawn {
+            background: linear-gradient(135deg, rgba(108, 117, 125, 0.9), rgba(226, 227, 229, 0.9));
+            color: #fff;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            color: var(--primary-gold);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-top: 3px solid var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #dc3545;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .hologram-card {
+                padding: 30px 25px;
+            }
+            .brand-logo {
+                font-size: 2.8rem;
+            }
+            .brand-text {
+                font-size: 2rem;
+            }
+            .news-panel {
+                position: relative;
+                width: 100%;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D背景 -->
+    <div class="background-3d" id="background3d"></div>
+
+    <!-- 动态新闻面板 -->
+    <div class="news-panel">
+        <div class="news-header">
+            <i class="fas fa-newspaper"></i>
+            <h3>LATEST NEWS</h3>
+        </div>
+        <div id="newsContainer">
+            <!-- News items will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-container">
+        <div class="hologram-card">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="brand-text">MAYBANK</div>
+                <div class="brand-subtitle">APPLICATION STATUS PORTAL</div>
+            </div>
+
+            <div class="input-container">
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" class="input-field" id="customerName" placeholder="Enter your full name">
+            </div>
+
+            <button class="search-btn" id="searchBtn">
+                <i class="fas fa-search"></i> CHECK APPLICATION STATUS
+            </button>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <div>Retrieving your application status...</div>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="result-container" id="resultContainer">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 创建3D浮动形状背景
+        function create3DBackground() {
+            const container = document.getElementById('background3d');
+            const shapeCount = 15;
+
+            for (let i = 0; i < shapeCount; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'floating-shape';
+                
+                const size = Math.random() * 120 + 30;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 20;
+                
+                shape.style.width = `${size}px`;
+                shape.style.height = `${size}px`;
+                shape.style.left = `${posX}%`;
+                shape.style.top = `${posY}%`;
+                shape.style.animationDelay = `${delay}s`;
+                shape.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(shape);
+            }
+        }
+
+        // 新闻数据 - 包含图标和内容
+        const newsDatabase = [
+            { icon: "🌧️", content: "Malaysia Floods: Thousands evacuated as heavy rains continue in several states" },
+            { icon: "🔥", content: "Hong Kong Fire: Major blaze in commercial district, multiple buildings affected" },
+            { icon: "🗳️", content: "Sabah Elections: Preliminary results show tight race between major coalitions" },
+            { icon: "💹", content: "Malaysian Economy: GDP growth exceeds expectations in Q1 2024" },
+            { icon: "🏗️", content: "Infrastructure: New MRT line construction ahead of schedule in Kuala Lumpur" },
+            { icon: "🌴", content: "Tourism Boost: Malaysia sees 40% increase in international visitors" },
+            { icon: "📱", content: "Tech Innovation: Malaysian startups secure record funding in first quarter" },
+            { icon: "🌏", content: "Climate Summit: Malaysia commits to carbon neutrality by 2050" },
+            { icon: "💰", content: "Maybank Announces New Credit Card Rewards Program with Enhanced Benefits" },
+            { icon: "🏆", content: "Maybank Wins Best Digital Banking Award 2024" },
+            { icon: "🔒", content: "Enhanced Security Features Added to All Maybank Credit Cards" },
+            { icon: "🎉", content: "Special Promotion: 0% Interest on Balance Transfers Until Year End" }
+        ];
+
+        // 显示新闻
+        function displayNews() {
+            const newsContainer = document.getElementById('newsContainer');
+            newsContainer.innerHTML = '';
+            
+            // 随机选择4-6条新闻
+            const shuffledNews = [...newsDatabase].sort(() => 0.5 - Math.random());
+            const selectedNews = shuffledNews.slice(0, Math.floor(Math.random() * 3) + 4);
+            
+            selectedNews.forEach(news => {
+                const newsItem = document.createElement('div');
+                newsItem.className = 'news-item';
+                newsItem.style.animationDelay = `${Math.random() * 0.5}s`;
+                newsItem.innerHTML = `
+                    <span class="news-icon">${news.icon}</span>
+                    <span class="news-content">${news.content}</span>
+                `;
+                newsContainer.appendChild(newsItem);
+            });
+        }
+
+        // 检查申请状态
+        function checkStatus() {
+            const customerName = document.getElementById('customerName').value.trim();
+            
+            if (!customerName) {
+                showError('Please enter your name to check application status');
+                return;
+            }
+
+            // 从localStorage获取数据
+            let customerData;
+            try {
+                const storedData = localStorage.getItem('maybankCustomerDatabase');
+                if (!storedData) {
+                    showError('No application data found. Please ensure data has been uploaded via admin panel.');
+                    return;
+                }
+                
+                customerData = JSON.parse(storedData);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError('Error loading application data. Please try again.');
+                return;
+            }
+
+            if (customerData.length === 0) {
+                showError('No application records found. Please upload data first.');
+                return;
+            }
+
+            showLoading(true);
+            hideResult();
+            hideError();
+
+            // 模拟API调用延迟
+            setTimeout(() => {
+                const normalizedName = customerName.toLowerCase().replace(/\s+/g, '');
+                const customer = findCustomer(customerData, normalizedName);
+                
+                if (customer) {
+                    displaySingleCustomerResult(customer);
+                } else {
+                    displayNoCustomerFound(customerName);
+                }
+                
+                showLoading(false);
+            }, 1500);
+        }
+
+        // 查找特定客户
+        function findCustomer(customerData, normalizedName) {
+            return customerData.find(customer => 
+                customer.normalizedName === normalizedName
+            );
+        }
+
+        // 显示单个客户结果
+        function displaySingleCustomerResult(customer) {
+            const resultContainer = document.getElementById('resultContainer');
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            // 客户姓名标题
+            const nameHeader = document.createElement('div');
+            nameHeader.className = 'applicant-name';
+            nameHeader.textContent = customer.name;
+            resultCard.appendChild(nameHeader);
+            
+            // 显示所有申请
+            if (customer.applications && customer.applications.length > 0) {
+                customer.applications.forEach(application => {
+                    const cardItem = createCardItem(application.card, application.status);
+                    resultCard.appendChild(cardItem);
+                });
+            } else {
+                const noApps = createCardItem('No applications found', 'NO DATA');
+                resultCard.appendChild(noApps);
+            }
+            
+            resultContainer.innerHTML = '';
+            resultContainer.appendChild(resultCard);
+            resultContainer.style.display = 'block';
+        }
+
+        // 显示未找到客户
+        function displayNoCustomerFound(customerName) {
+            const resultContainer = document.getElementById('resultContainer');
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            const nameHeader = document.createElement('div');
+            nameHeader.className = 'applicant-name';
+            nameHeader.textContent = customerName;
+            resultCard.appendChild(nameHeader);
+            
+            const noResult = createCardItem('No applications found for this name', 'NOT FOUND');
+            resultCard.appendChild(noResult);
+            
+            resultContainer.innerHTML = '';
+            resultContainer.appendChild(resultCard);
+            resultContainer.style.display = 'block';
+        }
+
+        // 创建卡片项目
+        function createCardItem(cardType, status) {
+            const cardItem = document.createElement('div');
+            cardItem.className = 'card-item';
+            
+            const cardTypeElement = document.createElement('span');
+            cardTypeElement.className = 'card-type';
+            cardTypeElement.textContent = cardType;
+            
+            const cardStatusElement = document.createElement('span');
+            cardStatusElement.className = 'card-status';
+            
+            let statusDisplay, statusClass;
+            
+            switch(status.toUpperCase()) {
+                case 'APPROVED':
+                case 'A':
+                    statusDisplay = "APPROVED";
+                    statusClass = "status-approved";
+                    break;
+                case 'DECLINED':
+                case 'D':
+                case 'REJECTED':
+                    statusDisplay = "DECLINED";
+                    statusClass = "status-declined";
+                    break;
+                case 'PENDING':
+                case 'P':
+                    statusDisplay = "PENDING REVIEW";
+                    statusClass = "status-pending";
+                    break;
+                case 'WITHDRAWN':
+                case 'W':
+                    statusDisplay = "WITHDRAWN";
+                    statusClass = "status-withdrawn";
+                    break;
+                case 'NO DATA':
+                    statusDisplay = "NO DATA";
+                    statusClass = "status-pending";
+                    break;
+                case 'NOT FOUND':
+                    statusDisplay = "NOT FOUND";
+                    statusClass = "status-declined";
+                    break;
+                default:
+                    statusDisplay = "PROCESSING";
+                    statusClass = "status-pending";
+            }
+
+            cardStatusElement.innerHTML = `<span class="status-badge ${statusClass}">${statusDisplay}</span>`;
+            
+            cardItem.appendChild(cardTypeElement);
+            cardItem.appendChild(cardStatusElement);
+            
+            return cardItem;
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        function hideResult() {
+            document.getElementById('resultContainer').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // 事件监听
+        document.getElementById('searchBtn').addEventListener('click', checkStatus);
+        document.getElementById('customerName').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                checkStatus();
+            }
+        });
+
+        // 初始化
+        window.addEventListener('load', function() {
+            create3DBackground();
+            displayNews();
+            document.getElementById('customerName').focus();
+            
+            // 每15秒更新一次新闻
+            setInterval(displayNews, 15000);
+            
+            // 检查数据
+            const customerData = localStorage.getItem('maybankCustomerDatabase');
+            if (customerData) {
+                const parsedData = JSON.parse(customerData);
+                console.log(`Loaded ${parsedData.length} customers from database`);
+            } else {
+                console.log('No customer data found in database. Please use admin panel to upload data.');
+            }
+        });
+    </script>
+</body>
+</html>
